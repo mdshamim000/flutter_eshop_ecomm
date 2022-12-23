@@ -1,6 +1,6 @@
 # flutter_eshop_ecomm
 
-A new Flutter project.
+A new Flutter project for bigdata course.
 
 ## Getting Started
 
