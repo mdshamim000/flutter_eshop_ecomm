@@ -53,9 +53,10 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'e-Shop',
           theme: ThemeData(
-            primarySwatch: Colors.indigo,
+            primarySwatch: Colors.amber,
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato',
+            
           ),
           home: auth.isAuth
               ? ProductsOverViewScreen()

@@ -45,7 +45,6 @@ class CartScreen extends StatelessWidget {
                       Spacer(),
                       Text(
                         '\$${cart.totalCost.toStringAsFixed(2)}',
-                        style: TextStyle(),
                       ),
                     ],
                   ),
@@ -61,7 +60,7 @@ class CartScreen extends StatelessWidget {
                         label: Text(
                           'Add Coupon',
                           style: TextStyle(
-                            color: Colors.amber,
+                            color: Colors.black,
                           ),
                         ),
                         backgroundColor: Theme.of(context).primaryColor,
@@ -80,7 +79,7 @@ class CartScreen extends StatelessWidget {
                         label: Text(
                           '\$${cart.totalCost.toStringAsFixed(2)}',
                           style: TextStyle(
-                            color: Colors.amber,
+                            color: Colors.black,
                           ),
                         ),
                         backgroundColor: Theme.of(context).primaryColor,
@@ -99,7 +98,7 @@ class CartScreen extends StatelessWidget {
                                       children: [
                                         Text('Confirm payment and order'),
                                         Text(
-                                          'StripeDEMO',
+                                          'Stripe DEMO',
                                           style: TextStyle(
                                             fontSize: 12,
                                           ),
