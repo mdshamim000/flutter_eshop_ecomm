@@ -7,76 +7,161 @@ import 'cartItemview.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart';
-
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
     return Scaffold(
-      appBar: AppBar(title: Text('MyCart')),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Expanded(
-                child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: cart.items.length,
-              itemBuilder: (itx, i) => CartItemView(
-                  id: cart.items.values.toList()[i].id!,
-                  productId: cart.items.keys.toList()[i],
-                  title: cart.items.values.toList()[i].title!,
-                  quantity: cart.items.values.toList()[i].quantity!,
-                  price: cart.items.values.toList()[i].price!),
-            )),
-            SizedBox(
-              height: 12,
-            ),
-            Card(
-              margin: EdgeInsets.all(12),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Total:',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                  Spacer(),
-                  Chip(
-                    label: Text(
-                              'Add Coupon',
-                            ),
-                            backgroundColor: Theme.of(context).accentColor,
-                          )
-                        ]),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Sum Total:',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          Text('\$${cart.totalCost}'),
-                        ]),
-                    ElevatedButton(
-                        onPressed: (() {
-                          Provider.of<Orders>(context, listen: false).addOrder(
-                              cart.items.values.toList(), cart.totalCost);
-
-                          cart.clear(); 
-                        }),
-                        child: Text('Order Now!')),
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+      appBar: AppBar(
+        title: Text('Your Cart'),
       ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView.builder(
+              itemCount: cart.items.length,
+              itemBuilder: (ctx, i) => CartItemView(
+                id: cart.items.values.toList()[i].id!,
+                productId: cart.items.keys.toList()[i],
+                price: cart.items.values.toList()[i].price!,
+                quantity: cart.items.values.toList()[i].quantity!,
+                title: cart.items.values.toList()[i].title!,
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Card(
+            margin: EdgeInsets.all(15),
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Total',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Spacer(),
+                      Text(
+                        '\$${cart.totalCost.toStringAsFixed(2)}',
+                        style: TextStyle(),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Discounts',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Spacer(),
+                      Chip(
+                        label: Text(
+                          'Add Coupon',
+                          style: TextStyle(
+                            color: Colors.amber,
+                          ),
+                        ),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Sum Total',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Spacer(),
+                      Chip(
+                        label: Text(
+                          '\$${cart.totalCost.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            color: Colors.amber,
+                          ),
+                        ),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                      onPressed: (() {
+                        showDialog(
+                            context: context,
+                            builder: ((ct) => AlertDialog(
+                                  title: Text('Billing'),
+                                  content: Container(
+                                    height: 233,
+                                    child: Column(
+                                      children: [
+                                        Text('Confirm payment and order'),
+                                        Text(
+                                          'StripeDEMO',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    OrderButton(cart: cart),
+                                    ElevatedButton(
+                                        onPressed: (() {
+                                          Navigator.of(ct).pop(false);
+                                        }),
+                                        child: Text('No')),
+                                  ],
+                                )));
+                      }),
+                      child: Text('Pay & Order')),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      child: _isLoading ? CircularProgressIndicator() : Text('Confirm'),
+      onPressed: (widget.cart.totalCost <= 0 || _isLoading)
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await Provider.of<Orders>(context, listen: false).addOrder(
+                widget.cart.items.values.toList(),
+                widget.cart.totalCost,
+              );
+              setState(() {
+                _isLoading = false;
+              });
+              widget.cart.clear();
+            },
     );
   }
 }
