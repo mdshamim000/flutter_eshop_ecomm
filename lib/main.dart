@@ -3,17 +3,15 @@ import 'package:flutter_eshop_ecomm/auth/auth_screen.dart';
 import 'package:flutter_eshop_ecomm/provider/carts.dart';
 import 'package:flutter_eshop_ecomm/provider/orders.dart';
 import 'package:flutter_eshop_ecomm/provider/product_provider.dart';
-import 'package:flutter_eshop_ecomm/screens/cartscreen.dart'; 
+import 'package:flutter_eshop_ecomm/screens/cartscreen.dart';
 import 'package:flutter_eshop_ecomm/screens/orderscreen.dart';
 import 'package:flutter_eshop_ecomm/screens/product_details_screen.dart';
-import 'package:flutter_eshop_ecomm/screens/products_overview_screen.dart'; 
+import 'package:flutter_eshop_ecomm/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
-
 
 import 'auth/auth.dart';
 
 Future<void> main() async {
-   
   runApp(const MyApp());
 }
 
@@ -23,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ 
+      providers: [
         ChangeNotifierProvider.value(
           value: Auth(),
         ),
@@ -33,8 +31,8 @@ class MyApp extends StatelessWidget {
           ) =>
               ProductProvider('', '', []),
           update: (ctx, auth, previousProducts) => ProductProvider(
-            auth.token??'',
-            auth.userId??'' ,
+            auth.token ?? '',
+            auth.userId ?? '',
             previousProducts == null ? [] : previousProducts.items,
           ),
         ),
@@ -73,7 +71,7 @@ class MyApp extends StatelessWidget {
             AuthScreen.routeName: (ctx) => AuthScreen(),
             ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
             CartScreen.routeName: (ctx) => CartScreen(),
-            OrderScreen.routeName: (ctx) => OrderScreen(),  
+            OrderScreen.routeName: (ctx) => OrderScreen(),
           },
         ),
       ),
